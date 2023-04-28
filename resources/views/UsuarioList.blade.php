@@ -10,7 +10,8 @@
   <body>
   <div class="container">
     <h1>Listagem de Usuários {{ request()->id }}</h1>
-    <form action="UsuarioList.php" method="post">
+    <form action="{{action('App\Http\Controllers\UsuarioController@search')}}" method="post">
+        @csrf
       <div class="row">
         <div class="col-2">
           <select name="campo" class="form-select">
@@ -19,39 +20,42 @@
           </select>
         </div>
         <div class="col-4">
-          <input type="text" class="form-control" placeholder="Pesquisar" name="valor" />
+          <input type="valor" class="form-control" placeholder="Pesquisar" name="valor" />
         </div>
         <div class="col-6">
           <button class="btn btn-primary" type="submit">
             <i class="fa-solid fa-magnifying-glass"></i> Buscar
           </button>
-          <a class="btn btn-success" href="UsuarioForm.php"><i class="fa-solid fa-plus"></i> Cadastrar</a>
+          <a class="btn btn-success" href='{{ action("App\Http\Controllers\UsuarioController@create") }}' ><i class="fa-solid fa-plus"></i> Cadastrar</a>
         </div>
       </div>
     </form>
       <table class="table table-striped table-hover">
       <thead>
-
         <tr>
           <th scope="col">ID</th>
           <th scope="col">Nome</th>
           <th scope="col">Telefone</th>
+          <th scope="col">Email</th>
           <th scope="col"></th>
           <th scope="col"></th>
         </tr>
-      </thead>
+      </thead> <!--  composer install
+                     php artisan migrate
+      -->
       <tbody>
-        @foreach ($usuario as $item)
-     		<tr>
-              <td scope='row'>(($item->id))</td>
-              <td>(($item->nome))</td>
-              <td>(($item->telefone))</td>
-              <td><a href='./UsuarioForm.php?id=$item->id'><i class='fa-solid fa-pen-to-square' style='color:orange;'></i></a></td>
-              <td><a href='./UsuarioList.php?id=$item->id'
-                      onclick='return confirm(\"Deseja Excluir?\")'
+         @foreach ($usuarios as $item )
+            <tr>
+              <td scope='row'>{{$item->id}}</td>
+              <td>{{$item->nome}}</td>
+              <td>{{$item->telefone}}</td>
+              <td>{{$item->email}}</td>
+              <td><a href="{{ action('App\Http\Controllers\UsuarioController@edit', $item->id)}}"><i class='fa-solid fa-pen-to-square' style='color:orange;'></i></a></td>
+              <td><a href="{{ action('App\Http\Controllers\UsuarioController@destroy', $item->id)}}"
+                      onclick='return confirm("Deseja Excluir?")'
               ><i class='fa-solid fa-trash' style='color:red;'></i></a></td>
             </tr>
-        @endforeach
+         @endforeach
         </tbody>
       </table>
     </div>
